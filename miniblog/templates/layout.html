@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Miniblog project</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'reset.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename = 'responsive.css') }}">
+	<link rel ="stylesheet" type ="text/css" href="{{ url_for('static', filename = 'style.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename = 'jquery.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename = 'main.js') }}"></script>
+</head>
+<body>
+
+	<section class="hero">
+		<header>
+			<div class="wrapper">
+				<a href="{{ url_for('show_entries') }}"><img src="/static/image/logo.png" class="logo" alt="Kvantum miniblog" title=""/></a>
+				<a href="#" class="hamburger"></a>
+				<nav>
+					<ul>
+						<li><a href="#">About</a></li>
+						<li><a href="#">Contact</a></li>
+				{% if not session.logged_in %}
+					</ul>
+					   <a href="{{ url_for('login') }}" class="login_btn">Login</a>
+				{% else %}
+					    <li><a href = "{{ url_for('upload') }}">Upload</a></li>
+					</ul>
+						<a href = "{{ url_for('logout') }}" class="login_btn">Logout</a>
+				{% endif %}
+					
+				</nav>
+			</div>
+		</header>
+	</section>
+
+	<section class="listings">
+		<div class="wrapper">
+			<ul class="properties_list">
+				{% for message in get_flashed_messages() %}
+		            <div class = flash> {{ message }}</div>
+		            <br><br>
+		         {% endfor %}
+		         {% block body %}{% endblock %}		
+		            </div>
+			</ul>
+			<div class="scroll_up">
+				<a href="#" class="scroll_up_btn">Scroll Up</a>
+			</div>
+		</div>
+	</section>	
+
+	<footer>
+		<div class="bottom wrapper">
+			Kvantum miniblog, 2016
+		</div>
+	</footer>
+	
+</body>
+</html>

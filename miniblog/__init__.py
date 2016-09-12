@@ -1,27 +1,27 @@
-import os
 from flask import Flask
+from config.config import DATABASE, SECRET_KEY, USERNAME, PASSWORD, DEBUG, UPLOAD_FOLDER, MUSIC_EXTENSIONS, IMAGE_EXTENSIONS, WATERMARK_PATH
+import os
 
 
-# Configuration parameters 
+app = Flask(__name__, static_url_path = '/static')
+
+from miniblog import models, views
+
 APP_DIR=os.path.dirname(os.path.realpath(__file__))
-DATABASE=os.path.join(APP_DIR, 'blog.db')
-UPLOAD_MUSIC = os.path.join(APP_DIR, 'static/music')
-UPLOAD_IMAGE = os.path.join(APP_DIR, 'static/image')
-MUSIC_EXTENSIONS = set(['mp3'])
-IMAGE_EXTENSIONS = set(['png', 'jpg'])
-DEBUG = True
-SECRET_KEY = 'averysecretkey'
-USERNAME = 'admin'
-PASSWORD = 'admin'
+print(APP_DIR)
+app.config.update(DATABASE = DATABASE,
+                  SECRET_KEY = SECRET_KEY,
+                  USERNAME = USERNAME,
+                  PASSWORD = PASSWORD,
+                  DEBUG = DEBUG,
+                  UPLOAD_FOLDER = UPLOAD_FOLDER,
+                  MUSIC_EXTENSIONS = MUSIC_EXTENSIONS,
+                  IMAGE_EXTENSIONS = IMAGE_EXTENSIONS,
+                  WATERMARK_PATH = WATERMARK_PATH
+                  )
 
-# Create our application
-app = Flask(__name__)
-app.config.from_object(__name__)
-
-import miniblog.views
-import miniblog.login_logout
-import miniblog.db
-import miniblog.watermarker
-import miniblog.test
-
-
+app.add_url_rule('/', view_func = views.show_entries, methods=['GET'])
+app.add_url_rule('/login', view_func = views.login, methods=['GET', 'POST'])
+app.add_url_rule('/logout', view_func = views.logout, methods=['GET'])
+app.add_url_rule('/add', view_func = views.add_entry, methods=['POST'])
+app.add_url_rule('/upload', view_func = views.upload_file, methods=['GET', 'POST'])
